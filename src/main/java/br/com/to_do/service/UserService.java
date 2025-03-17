@@ -4,6 +4,7 @@ import br.com.to_do.domain.user.UpdateUserDTO;
 import br.com.to_do.domain.user.CreateUserDTO;
 import br.com.to_do.domain.user.User;
 import br.com.to_do.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,14 @@ public class UserService {
         return this.repository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    @Transactional
     public User createAUser(CreateUserDTO data) {
         var newUser = this.user.create(data);
         this.repository.save(newUser);
         return newUser;
     }
 
+    @Transactional
     public User updateAUser(String id, UpdateUserDTO data) {
         var updatedUser = this.repository.findById(id).orElseThrow(RuntimeException::new);
         updatedUser.update(data);
@@ -36,8 +39,10 @@ public class UserService {
         return updatedUser;
     }
 
+    @Transactional
     public void disableUserById(String id) {
         var user = this.repository.findById(id).orElseThrow(RuntimeException::new);
         user.disableUser();
+        this.repository.save(user);
     }
 }
