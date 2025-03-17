@@ -1,4 +1,4 @@
-package br.com.to_do.domain;
+package br.com.to_do.domain.user;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +27,27 @@ public class User {
     private String email;
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    private Boolean active = true;
     private LocalDateTime created_at;
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updated_at;
+
+    public User create(CreateUserDTO data) {
+        this.fullerName = data.fullerName();
+        this.email = data.email();
+
+        return this;
+    }
+
+    public User update(UpdateUserDTO data) {
+        this.fullerName = data.fullerName();
+        this.email = data.email();
+
+        return this;
+    }
+
+    public void disableUser() {
+        this.active = !this.active;
+    }
 }
